@@ -70,7 +70,7 @@
     </v-navigation-drawer>
     <v-main>
       <router-view />
-    </v-main>
+    </v-main> 
   </v-app>
 </template>
 
