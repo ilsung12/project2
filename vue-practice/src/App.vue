@@ -7,6 +7,18 @@
     <input type="text" v-model="food" />
     <div v-html="alertMessage"></div>
     <div v-html="subscribeHTML"></div>
+    <img v-bind:src="imageSource" alt="random" />
+    <br />
+    <a v-bind:href="naverUrl">naver</a>
+    <br />
+    <a :href="naverUrl">naver 2</a>
+    <br />
+    <a :href="food">{{ food }}</a>
+    <hr />
+    <h2 :class="{ red: food === 'apple', 'not-good': food === 'rice' }">
+      원숭이는 {{}} 를 좋아합니다.
+    </h2>
+    <!-- <h2 :class="{'not-good': }">원숭이는 {{}} 를 좋아합니다.</h2> -->
   </div>
 </template>
 
@@ -19,6 +31,8 @@ export default {
       food: 'banana',
       alertMessage: '<h2>경고 ! !</h2>',
       subscribeHTML: `<button onclick="document.querySelector('body').style.display = 'none'">구독하기</button>`,
+      imageSource: 'https://placeimg.com/100/100/any',
+      naverUrl: 'https://www.naver.com',
     };
   },
 };
@@ -35,5 +49,21 @@ export default {
 }
 input {
   font-size: 30px;
+}
+
+.orange {
+  color: orange;
+}
+
+.salmon {
+  color: salmon;
+}
+
+.red {
+  color: red;
+}
+
+.not-good {
+  text-decoration: line-through;
 }
 </style>
