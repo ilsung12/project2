@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HANACNS AS Request App</title>
+{% extends 'base.html' %}
+
+
+{% block title %}todo_form.html{% endblock %}
+
+{% block extra-style %}
 
     <style>
         body {
@@ -23,6 +23,7 @@
             border-bottom: 1px solid #ddd;
             width: 70px;
             padding-left: 20px;
+            line-height: 20px;
         }
         .inputBox .item {
             border-style: none;
@@ -30,6 +31,7 @@
             width: 400px;
             margin-left: 50px;
             padding-left: 20px;
+            line-height: 20px;
         }
         .todoList {
             list-style: none;
@@ -50,9 +52,9 @@
             font-size: 20px;
         }
     </style>
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
     <div id='app'>
 
         <h1>HANACNS AS 요청</h1>
@@ -63,10 +65,8 @@
         <form class="inputBox" action="." method="post"> {% csrf_token %}
             <input class="name" type="text" placeholder="SITE ..." name="name">
             <input class="item" type="text" placeholder="AS 요청 내용 ..." name="todo">
-            <button type="submit">ADD</button>
+            <button type="submit" class="btn btn-info btn-sm" >ADD</button>
         </form>
 
     </div>
-
-</body>
-</html>
+{% endblock %}

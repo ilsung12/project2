@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HANACNS AS Request App</title>
+{% extends 'base.html' %}
 
+{% block title %}todo_vue_only.html{%endblock%}
+
+{% block extra-style %}
     <style>
         body {
             text-align: center;
@@ -21,8 +19,9 @@
         .inputBox .name {
             border-style: none;
             border-bottom: 1px solid #ddd;
-            width: 70px;
+            width: 90px;
             padding-left: 20px;
+            line-height: 20px;
         }
         .inputBox .item {
             border-style: none;
@@ -30,6 +29,7 @@
             width: 400px;
             margin-left: 50px;
             padding-left: 20px;
+            line-height: 20px;
         }
         .todoList {
             list-style: none;
@@ -50,9 +50,10 @@
             font-size: 20px;
         }
     </style>
-</head>
 
-<body>
+{% endblock %}
+
+{% block content %}
     <div id='app'>
 
         <h1>HANACNS AS 요청</h1>
@@ -64,9 +65,9 @@
             <input class="name" type="text" placeholder="SITE ..." v-model="name">
             <input class="item" type="text" placeholder="AS 요청 내용 ..." v-model="newTodoItem"
                 v-on:keyup.enter="add_todo()">
-            <button v-on:click="add_todo()">ADD</button>
+            <button v-on:click="add_todo()" class="btn btn-info btn-sm">ADD</button>
         </div>
-    
+
         <ul class="todoList">
             <li v-for="(todo, index) in todoItems">
                 <span>{ todo.name }:: { todo.item }</span>
@@ -75,7 +76,9 @@
         </ul>
         
     </div>
-    
+{% endblock %}
+
+{% block extra-script %}
     <!-- vue js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <!-- <script src="https://unpkg.com/vue/dist/vue.min.js"></script> -->
@@ -116,6 +119,4 @@
             },
         })
     </script>
-
-</body>
-</html>
+{% endblock %}

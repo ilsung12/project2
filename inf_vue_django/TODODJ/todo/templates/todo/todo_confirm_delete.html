@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HANACNS AS Request App</title>
+{% extends 'base.html'%}
 
+{% block title %}todo_confirm_delete.html{% endblock %}
+
+{% block extra-style %}
     <style>
         body {
             text-align: center;
@@ -50,9 +48,9 @@
             font-size: 20px;
         }
     </style>
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
     <div id='app'>
 
         <h1>Todo Delete</h1>
@@ -60,11 +58,10 @@
         <br />
 
         <form action="." method="post"> {% csrf_token %}
-            <button type="submit">Confirm</button>
+            <button type="submit" class="btn btn-danger btn-sm">Confirm</button>
         </form>
-
     </div>
 
+{% endblock %}
 
-</body>
 </html>
