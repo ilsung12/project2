@@ -50,6 +50,12 @@
             margin-left: auto;
             font-size: 20px;
         }
+        .removeBtn:hover {
+            color: red;
+            font-weight: bold;
+            font-size: 28px;
+            margin-right: -3px;
+        }
     </style>
 
 {% endblock %}
@@ -63,16 +69,16 @@
         <br>
 
         <div class="inputBox">
-            <input class="name" type="text" placeholder="SITE ..." v-model="name">
-            <input class="item" type="text" placeholder="AS 요청 내용 ..." v-model="todo"
+            <input class="name" type="text" placeholder="SITE ..." v-model.trim="name">
+            <input class="item" type="text" placeholder="AS 요청 내용 ..." v-model.trim="todo"
                 v-on:keyup.enter="add_todo()">
             <button v-on:click="add_todo()" class="btn btn-info btn-sm">ADD</button>
         </div>
 
         <ul class="todoList">
-            <li v-for="(todo, index) in todoItems">
-                <span>{ todo.name }:: { todo.item }</span>
-                <span class="removeBtn" v-on:click="remove_todo(index)">&#x00D7</span>
+            <li v-for="(todo, index) in todoList">
+                <span>[[ todo.name ]]:: [[ todo.todo ]]</span>
+                <span class="removeBtn" v-on:click="remove_todo(todo, index)">&#x00D7</span>
             </li>
         </ul>
         
@@ -83,41 +89,75 @@
     <!-- vue js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <!-- <script src="https://unpkg.com/vue/dist/vue.min.js"></script> -->
-    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        axios.defaults.xsrfCookieName = 'csrftoken';
+        axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
         var vm = new Vue({
-            delimiters: ['{', '}'],
+            delimiters: ['[[', ']]'],
             el: '#app',
             data: {
                 name: '',
-                newTodoItem: '',
-                todoItems:[
-                    {name: '김석훈', item: 'Django 와 Vue.js 연동 프로그램을 만들고 있습니다.'},
-                    {name: '홍길동', item: '이름을 안쓰면 홍길동으로 나와요...'},
-                    {name: '이순신', item: '신에게는 아직 열두 척의 배가 있사옵니다.'},
-                    {name: '성춘향', item: '그네 타기'},                    
-                ],
+                todo: '',
+                todoList:[],
+            },
+            created: function() {
+                console.log("created()...");
+                this.fetch_all_todo();
             },
             methods: {
+                fetch_all_todo: function() {
+                    console.log('fetch_all_todo()....')
+                    
+                    var vm = this
+                    axios.get('api/todo/list/')
+                        .then(function(res) {
+                            console.log('GET RES', res);
+                            vm.todoList = res.data;
+                        })
+                        .catch(function(err) {
+                            console.log('GET ERR', err);
+                        })
+                },
                 add_todo: function() {
                     console.log("add_todo()...");
-                    if (this.name == '') this.name = '요청'
-                    if (this.newTodoItem == '') {
-                        alert('요청내용을 입력하세요.') 
-                        this.name = ''
-                        this.newTodoItem = ''
-                        return;
-                    }
+        
+                    if (this.todo == '') return;
+                    if (this.name == '') this.name = '요청';
+                    
+                    var vm = this;
+                    var postData = {name: this.name, todo: this.todo};
+                    axios.post('api/todo/create', postData)
+                        .then(function(res){
+                            console.log('POST RES', res)
 
-                    this.todoItems.push({name: this.name, item: this.newTodoItem});
-                    this.name = ''
-                    this.newTodoItem = ''
+                            vm.todoList.push({id: res.data.id, name: res.data.name, todo: res.data.todo});
+                        })
+                        .catch(function(err){
+                            console.log('POST ERR', err)
+                        })
+                    
+                    
+                    vm.name = vm.todo = '';
+
                 },
-                remove_todo: function(index) {
-                    console.log("remove_todo()...");
-                    this.todoItems.splice(index, 1);
+                remove_todo: function(todo, index) {
+                    console.log("remove_todo()...", index);
+                    if (confirm('Really Delete ?') == false) return;
+
+                    axios.delete('api/todo/' + todo.id + '/delete/')
+                        .then(function(res) {
+                            console.log('DELETE RES', res);
+
+                            vm.todoList.splice(index, 1);
+                        })
+                        .catch(function(err) {
+                            console.log('DELETE ERR', err)   
+                        })
                 }
             },
+            
         })
     </script>
 {% endblock %}
